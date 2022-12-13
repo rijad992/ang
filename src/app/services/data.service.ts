@@ -1,16 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  combineLatest,
-  map,
-  switchMap,
-  timer,
-} from 'rxjs';
-import { DataComment } from '../types/DataComment.type';
-import { Post } from '../types/Post.type';
+import { combineLatest, map, switchMap, timer } from 'rxjs';
+import { User } from '../types/User.type';
 import { Todo } from '../types/Todo.type';
 
-const NUMBER_OF_POSTS = 10;
+const NUMBER_OF_TODOS = 5;
 
 @Injectable({
   providedIn: 'root',
@@ -26,26 +20,23 @@ export class DataService {
     return timer(0, 10000).pipe(
       switchMap(() =>
         combineLatest([
-          this.http.get<Post[]>(
-            'https://jsonplaceholder.typicode.com/posts'
-          ),
-          this.http.get<Todo[]>(
-            'https://jsonplaceholder.typicode.com/todos'
-          ),
-          this.http.get<DataComment[]>(
-            'https://jsonplaceholder.typicode.com/comments'
-          ),
+          this.http.get<User[]>('https://jsonplaceholder.typicode.com/users'),
+          this.http.get<Todo[]>('https://jsonplaceholder.typicode.com/todos'),
         ])
       ),
-      map(([posts, todos, comments]) => {
-        const postsSlice = this.generateRandomInt(90);
-        const todosSlice = this.generateRandomInt(190);
-        const commentsSlice = this.generateRandomInt(490);
-        return [
-          posts.slice(postsSlice, postsSlice + NUMBER_OF_POSTS),
-          todos.slice(todosSlice, todosSlice + NUMBER_OF_POSTS),
-          comments.slice(commentsSlice, commentsSlice + NUMBER_OF_POSTS)
-        ];
+      map(([users, todos]) => {
+        const userTodos: Todo[] = todos.map((todo) => ({
+          ...todo,
+          userId: this.generateRandomInt(4),
+        }));
+
+        const todoSlicePosition = this.generateRandomInt(15);
+        return users.slice(0, 3).map((item) => ({
+          title: item.name,
+          items: userTodos
+            .filter((todo) => todo.userId === item.id)
+            .slice(todoSlicePosition, todoSlicePosition + NUMBER_OF_TODOS),
+        }));
       })
     );
   }

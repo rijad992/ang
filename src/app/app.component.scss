@@ -11,3 +11,14 @@
     height: 100%;
     background-color: white;
 }
+
+.accordion-item {
+    &-header {
+        display: flex;
+        padding: 10px;
+        justify-content: space-between;
+        align-items: center;
+        color: gray;
+        background-color: #fafafa;;
+    }
+}

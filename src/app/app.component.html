@@ -1,3 +1,24 @@
 <div class="container">
-    <app-accordion></app-accordion>
+  <app-accordion toggled>
+    <app-accordion-item
+      *ngFor="
+        let accGroup of $data | async;
+        let index = index;
+        trackBy: trackByTitle
+      "
+      #item="appAccordionItem"
+      [attr.id]="'accordion-header-' + index"
+    >
+      <div tabindex="0" class="accordion-item-header" (click)="item.toggle()">
+        <h2>{{ accGroup.title }}</h2>
+        <span>{{ !item.toggled ? "⌄" : "^" }}</span>
+      </div>
+      <div
+        *ngFor="let accItem of accGroup.items"
+        [style.display]="item.toggled ? 'block' : 'none'"
+      >
+        <span>{{ accItem.title }}</span>
+      </div>
+    </app-accordion-item>
+  </app-accordion>
 </div>

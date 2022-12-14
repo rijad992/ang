@@ -19,7 +19,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.$data = this.service.getData();
+  }
 
-    this.$data.subscribe(console.log)
+  trackByName(index: number, item: any) {
+    return item.name;
   }
 }

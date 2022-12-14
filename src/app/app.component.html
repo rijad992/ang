@@ -1,3 +1,25 @@
 <div class="container">
-    <app-accordion></app-accordion>
+  <app-accordion allToggled>
+    <app-accordion-item
+      *ngFor="
+        let accItem of $data | async;
+        let index = index;
+        trackBy: trackByName
+      "
+      #item="appAccordionItem"
+    >
+      <div class="accordion-header" (click)="item.toggle()">
+        <span>{{ accItem.title }}</span
+        ><span>{{ item.toggled ? "Close" : "Open" }}</span>
+      </div>
+      <div
+        class="acordion-body"
+        [style.display]="item.toggled ? 'block' : 'none'"
+      >
+        <div *ngFor="let todo of accItem.items">
+          {{ todo.title }}
+        </div>
+      </div>
+    </app-accordion-item>
+  </app-accordion>
 </div>
